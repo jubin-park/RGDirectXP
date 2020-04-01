@@ -1,8 +1,7 @@
-require "ruby18"
-require "rpg"
-require "rtp_path"
-require "viewport"
-
+require "head/ruby18"
+require "head/rpg"
+require "head/rtp_path"
+require "head/viewport"
 
 getCommandLine_f = Win32API.new("Kernel32", "GetCommandLine", "", "P")
 startupString = getCommandLine_f.call.split(' ')
