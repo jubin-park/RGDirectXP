@@ -90,11 +90,14 @@ module PK8
     Colors[31] = [192, 128, 255]
   end
 end
+
 class Window_Base < Window
+  
   unless method_defined?(:pk8_xpwindowskin_initialize)
     alias_method(:pk8_xpwindowskin_initialize, :initialize)
     alias_method(:pk8_xpwindowskin_update, :update)
   end
+
   def initialize(*args)
     pk8_xpwindowskin_initialize(*args)
     if self.windowskin.width == 192 and self.windowskin.height == 128
@@ -109,7 +112,9 @@ class Window_Base < Window
       new_windowskin.dispose
     end
   end
+
   def update
     pk8_xpwindowskin_update
   end
+
 end

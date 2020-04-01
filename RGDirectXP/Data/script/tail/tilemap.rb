@@ -95,21 +95,22 @@ RESOLUTION_LOG = true
 
 class Integer
 
-def gcd(num)
-  # Returns the greatest common denominator of self and num.
-  min, max = self.abs, num.abs
-  while min > 0
-    tmp = min
-    min = max % min
-    max = tmp
+  def gcd(num)
+    # Returns the greatest common denominator of self and num.
+    min, max = self.abs, num.abs
+    while min > 0
+      tmp = min
+      min = max % min
+      max = tmp
+    end
+    return max
   end
-  return max
-end
 
-def lcm(num)
-  # Returns the lowest common multiple of self and num.
-  return [self, num].include?(0) ? 0 : (self / self.gcd(num) * num).abs
-end
+  def lcm(num)
+    # Returns the lowest common multiple of self and num.
+    return [self, num].include?(0) ? 0 : (self / self.gcd(num) * num).abs
+  end
+
 end
 
 #===============================================================================
@@ -118,62 +119,62 @@ end
 
 module RPG::Cache
 
-AUTO_INDEX = [
+  AUTO_INDEX = [
 
-  [27,28,33,34],  [5,28,33,34],  [27,6,33,34],  [5,6,33,34],
-  [27,28,33,12],  [5,28,33,12],  [27,6,33,12],  [5,6,33,12],
-  [27,28,11,34],  [5,28,11,34],  [27,6,11,34],  [5,6,11,34],
-  [27,28,11,12],  [5,28,11,12],  [27,6,11,12],  [5,6,11,12],
-  [25,26,31,32],  [25,6,31,32],  [25,26,31,12], [25,6,31,12],
-  [15,16,21,22],  [15,16,21,12], [15,16,11,22], [15,16,11,12],
-  [29,30,35,36],  [29,30,11,36], [5,30,35,36],  [5,30,11,36],
-  [39,40,45,46],  [5,40,45,46],  [39,6,45,46],  [5,6,45,46],
-  [25,30,31,36],  [15,16,45,46], [13,14,19,20], [13,14,19,12],
-  [17,18,23,24],  [17,18,11,24], [41,42,47,48], [5,42,47,48],
-  [37,38,43,44],  [37,6,43,44],  [13,18,19,24], [13,14,43,44],
-  [37,42,43,48],  [17,18,47,48], [13,18,43,48], [13,18,43,48]
+    [27,28,33,34],  [5,28,33,34],  [27,6,33,34],  [5,6,33,34],
+    [27,28,33,12],  [5,28,33,12],  [27,6,33,12],  [5,6,33,12],
+    [27,28,11,34],  [5,28,11,34],  [27,6,11,34],  [5,6,11,34],
+    [27,28,11,12],  [5,28,11,12],  [27,6,11,12],  [5,6,11,12],
+    [25,26,31,32],  [25,6,31,32],  [25,26,31,12], [25,6,31,12],
+    [15,16,21,22],  [15,16,21,12], [15,16,11,22], [15,16,11,12],
+    [29,30,35,36],  [29,30,11,36], [5,30,35,36],  [5,30,11,36],
+    [39,40,45,46],  [5,40,45,46],  [39,6,45,46],  [5,6,45,46],
+    [25,30,31,36],  [15,16,45,46], [13,14,19,20], [13,14,19,12],
+    [17,18,23,24],  [17,18,11,24], [41,42,47,48], [5,42,47,48],
+    [37,38,43,44],  [37,6,43,44],  [13,18,19,24], [13,14,43,44],
+    [37,42,43,48],  [17,18,47,48], [13,18,43,48], [13,18,43,48]
 
-]
+  ]
 
-def self.autotile(filename)
-  key = "Graphics/Autotiles/#{filename}"
-  if !@cache.include?(key) || @cache[key].disposed? 
-    # Cache the autotile graphic.
-    @cache[key] = (filename == '') ? Bitmap.new(128, 96) : Bitmap.new(key)
-    # Cache each configuration of this autotile.
-    self.format_autotiles(@cache[key], filename)
+  def self.autotile(filename)
+    key = "Graphics/Autotiles/#{filename}"
+    if !@cache.include?(key) || @cache[key].disposed? 
+      # Cache the autotile graphic.
+      @cache[key] = (filename == '') ? Bitmap.new(128, 96) : Bitmap.new(key)
+      # Cache each configuration of this autotile.
+      self.format_autotiles(@cache[key], filename)
+    end
+    return @cache[key]
   end
-  return @cache[key]
-end
 
-def self.format_autotiles(bitmap, filename)
-  # Iterate all 48 combinations using the INDEX, and save copy to cache.
-  (0...(bitmap.width / 96)).each {|frame|
-    # Iterate for each frame in the autotile. (Only for animated ones)
-    template = Bitmap.new(256, 192)
-    # Create a bitmap to use as a template for creation.
-    (0...6).each {|i| (0...8).each {|j| AUTO_INDEX[8*i+j].each {|number|
-      number -= 1
-      x, y = 16 * (number % 6), 16 * (number / 6)
-      rect = Rect.new(x + (frame * 96), y, 16, 16)
-      template.blt(32 * j + x % 32, 32 * i + y % 32, bitmap, rect)
-    }
-    # Use the above created template to create individual tiles.
-    index = 8*i+j
-    tile = Bitmap.new(32, 32)
-    sx, sy = 32 * (index % 8), 32 * (index / 8)
-    rect = Rect.new(sx, sy, 32, 32)
-    tile.blt(0, 0, template, rect)
-    @cache[[filename, index, frame]] = tile
-  }}
-  # Dispose the template since it will not be used again.
-  template.dispose }
-end
+  def self.format_autotiles(bitmap, filename)
+    # Iterate all 48 combinations using the INDEX, and save copy to cache.
+    (0...(bitmap.width / 96)).each {|frame|
+      # Iterate for each frame in the autotile. (Only for animated ones)
+      template = Bitmap.new(256, 192)
+      # Create a bitmap to use as a template for creation.
+      (0...6).each {|i| (0...8).each {|j| AUTO_INDEX[8*i+j].each {|number|
+        number -= 1
+        x, y = 16 * (number % 6), 16 * (number / 6)
+        rect = Rect.new(x + (frame * 96), y, 16, 16)
+        template.blt(32 * j + x % 32, 32 * i + y % 32, bitmap, rect)
+      }
+      # Use the above created template to create individual tiles.
+      index = 8*i+j
+      tile = Bitmap.new(32, 32)
+      sx, sy = 32 * (index % 8), 32 * (index / 8)
+      rect = Rect.new(sx, sy, 32, 32)
+      tile.blt(0, 0, template, rect)
+      @cache[[filename, index, frame]] = tile
+    }}
+    # Dispose the template since it will not be used again.
+    template.dispose }
+  end
 
-def self.load_autotile(name, tile_id, frame = 0)
-  # Returns the autotile for the current map with TILE_ID and FRAME.
-  return @cache[[name, tile_id % 48, frame]]
-end
+  def self.load_autotile(name, tile_id, frame = 0)
+    # Returns the autotile for the current map with TILE_ID and FRAME.
+    return @cache[[name, tile_id % 48, frame]]
+  end
 end
 
 #===============================================================================
@@ -182,93 +183,93 @@ end
 
 class Tilemap
 
-attr_reader   :map_data, :ox, :oy, :viewport
-attr_accessor :tileset, :autotiles, :priorities
+  attr_reader   :map_data, :ox, :oy, :viewport
+  attr_accessor :tileset, :autotiles, :priorities
 
-def initialize(viewport)
-  # Initialize instance variables to store required data.
-  @viewport, @autotiles, @layers, @ox, @oy = viewport, [], [], 0, 0
-  # Get priority and autotile data for this tileset from instance of Game_Map.
-  @priorities, @animated = $game_map.priorities, $game_map.autotile_data
-  # Create a sprite and viewport to use for each priority level.
-  (0..5).each {|i|
-    @layers[i] = Sprite.new(viewport)
-    @layers[i].z = i * 32
-  }
-end
-
-def ox=(ox)
-  # Set the origin of the X-axis for all the sprites.
-  @ox = ox
-  @layers.each {|sprite| sprite.ox = @ox } 
-end
-
-def oy=(oy)
-  # Set the origin of the y-axis for all the sprites.
-  @oy = oy
-  @layers.each {|sprite| sprite.oy = @oy } 
-end
-
-def dispose
-  # Dispose all of the sprites and viewports.
-  @layers.each {|layer| layer.dispose }
-end
-
-def map_data=(data)
-  # Set the map data to an instance variable.
-  @map_data = data
-  # Clear any sprites' bitmaps if it exists, or create new ones.
-  @layers.each_index {|i|
-    if @layers[i].bitmap != nil
-      # Dispose bitmap and set to nil.
-      @layers[i].bitmap = @layers[i].bitmap.dispose
-    end
-    # Create new bitmap, whose size is the same as the game map.
-    @layers[i].bitmap = Bitmap.new($game_map.width*32, $game_map.height*32)
-  }
-  # Draw bitmaps accordingly.
-  refresh
-end
-
-def refresh    
-  # Set the animation data from the file if it exists, or create it now.
-  @animated = $game_map.autotile_data
-  # Iterate through all map layers, starting with the bottom.
-  [0,1,2].each {|z| (0...@map_data.ysize).each {|y| (0...@map_data.xsize).each {|x|
-    tile_id = @map_data[x, y, z]
-    # Go to the next iteration if no bitmap is defined for this tile.
-    if tile_id == 0 # No tile
-      next
-    elsif tile_id < 384 # Autotile
-      name = $game_map.autotile_names[(tile_id / 48) - 1]
-      bitmap = RPG::Cache.load_autotile(name, tile_id)
-    else # Normal Tile
-      bitmap = RPG::Cache.tile($game_map.tileset_name, tile_id, 0) 
-    end
-    # Determine what the layer to draw tile, based off priority.
-    layer = @priorities[tile_id] 
-    # Perform a block transfer from the created bitmap to the sprite bitmap.
-    @layers[layer].bitmap.blt(x*32, y*32, bitmap, Rect.new(0, 0, 32, 32))
-  }}}
-end
-
-def update
-  # Update the sprites.
-  if Graphics.frame_count % $game_map.autotile_speed == 0
-    # Increase current frame of tile by one, looping by width.
-    @animated[0].each_index {|i|
-      @animated[2][i] = (@animated[2][i] + 1) % @animated[1][i]
-      @animated[3][i].each {|data|
-        # Gather data using the stored coordinates from the map data.
-        tile_id, x, y = @map_data[data[0], data[1], data[2]], data[0], data[1]
-        name, layer = @animated[0][i], @priorities[tile_id]
-        # Load the next frame of the autotile and set it to the map.
-        bitmap = RPG::Cache.load_autotile(name, tile_id, @animated[2][i])
-        @layers[layer].bitmap.blt(x*32, y*32, bitmap, Rect.new(0, 0, 32, 32)) 
-      }
+  def initialize(viewport)
+    # Initialize instance variables to store required data.
+    @viewport, @autotiles, @layers, @ox, @oy = viewport, [], [], 0, 0
+    # Get priority and autotile data for this tileset from instance of Game_Map.
+    @priorities, @animated = $game_map.priorities, $game_map.autotile_data
+    # Create a sprite and viewport to use for each priority level.
+    (0..5).each {|i|
+      @layers[i] = Sprite.new(viewport)
+      @layers[i].z = i * 32
     }
   end
-end
+
+  def ox=(ox)
+    # Set the origin of the X-axis for all the sprites.
+    @ox = ox
+    @layers.each {|sprite| sprite.ox = @ox } 
+  end
+
+  def oy=(oy)
+    # Set the origin of the y-axis for all the sprites.
+    @oy = oy
+    @layers.each {|sprite| sprite.oy = @oy } 
+  end
+
+  def dispose
+    # Dispose all of the sprites and viewports.
+    @layers.each {|layer| layer.dispose }
+  end
+
+  def map_data=(data)
+    # Set the map data to an instance variable.
+    @map_data = data
+    # Clear any sprites' bitmaps if it exists, or create new ones.
+    @layers.each_index {|i|
+      if @layers[i].bitmap != nil
+        # Dispose bitmap and set to nil.
+        @layers[i].bitmap = @layers[i].bitmap.dispose
+      end
+      # Create new bitmap, whose size is the same as the game map.
+      @layers[i].bitmap = Bitmap.new($game_map.width*32, $game_map.height*32)
+    }
+    # Draw bitmaps accordingly.
+    refresh
+  end
+
+  def refresh    
+    # Set the animation data from the file if it exists, or create it now.
+    @animated = $game_map.autotile_data
+    # Iterate through all map layers, starting with the bottom.
+    [0,1,2].each {|z| (0...@map_data.ysize).each {|y| (0...@map_data.xsize).each {|x|
+      tile_id = @map_data[x, y, z]
+      # Go to the next iteration if no bitmap is defined for this tile.
+      if tile_id == 0 # No tile
+        next
+      elsif tile_id < 384 # Autotile
+        name = $game_map.autotile_names[(tile_id / 48) - 1]
+        bitmap = RPG::Cache.load_autotile(name, tile_id)
+      else # Normal Tile
+        bitmap = RPG::Cache.tile($game_map.tileset_name, tile_id, 0) 
+      end
+      # Determine what the layer to draw tile, based off priority.
+      layer = @priorities[tile_id] 
+      # Perform a block transfer from the created bitmap to the sprite bitmap.
+      @layers[layer].bitmap.blt(x*32, y*32, bitmap, Rect.new(0, 0, 32, 32))
+    }}}
+  end
+
+  def update
+    # Update the sprites.
+    if Graphics.frame_count % $game_map.autotile_speed == 0
+      # Increase current frame of tile by one, looping by width.
+      @animated[0].each_index {|i|
+        @animated[2][i] = (@animated[2][i] + 1) % @animated[1][i]
+        @animated[3][i].each {|data|
+          # Gather data using the stored coordinates from the map data.
+          tile_id, x, y = @map_data[data[0], data[1], data[2]], data[0], data[1]
+          name, layer = @animated[0][i], @priorities[tile_id]
+          # Load the next frame of the autotile and set it to the map.
+          bitmap = RPG::Cache.load_autotile(name, tile_id, @animated[2][i])
+          @layers[layer].bitmap.blt(x*32, y*32, bitmap, Rect.new(0, 0, 32, 32)) 
+        }
+      }
+    end
+  end
 end
 
 #===============================================================================
@@ -330,31 +331,31 @@ end
 
 class Game_Character
 
-def screen_z(height = 0)
-  if @always_on_top
-    # Return high Z value if always on top flag is present.
-    return 999
-  elsif height != nil && height > 32
-    # Iterate through map characters to their positions relative to this one.
-    characters = $game_map.events.values
-    characters += [$game_player] unless self.is_a?(Game_Player)
-    # Find and set any character that is one tile above this one.
-    above, z = characters.find {|chr| chr.x == @x && chr.y == @y - 1 }, 0
-    if above != nil
-      # If found, adjust value by this one's Z, and the other's.
-      z = (above.screen_z(48) >= 32 ? 33 : 31)
+  def screen_z(height = 0)
+    if @always_on_top
+      # Return high Z value if always on top flag is present.
+      return 999
+    elsif height != nil && height > 32
+      # Iterate through map characters to their positions relative to this one.
+      characters = $game_map.events.values
+      characters += [$game_player] unless self.is_a?(Game_Player)
+      # Find and set any character that is one tile above this one.
+      above, z = characters.find {|chr| chr.x == @x && chr.y == @y - 1 }, 0
+      if above != nil
+        # If found, adjust value by this one's Z, and the other's.
+        z = (above.screen_z(48) >= 32 ? 33 : 31)
+      end
+      # Check for Blizz-ABS and adjust coordinates for the pixel-rate.
+      if $BlizzABS
+        x = ((@x / $game_system.pixel_rate) / 2.0).to_i
+        y = ((@y / $game_system.pixel_rate) / 2.0).to_i
+        return $game_map.priority_data[x, y] + z
+      else
+        return $game_map.priority_data[@x, @y] + z
+      end
     end
-    # Check for Blizz-ABS and adjust coordinates for the pixel-rate.
-    if $BlizzABS
-      x = ((@x / $game_system.pixel_rate) / 2.0).to_i
-      y = ((@y / $game_system.pixel_rate) / 2.0).to_i
-      return $game_map.priority_data[x, y] + z
-    else
-      return $game_map.priority_data[@x, @y] + z
-    end
+    return 0
   end
-  return 0
-end
 end
 
 #===============================================================================
@@ -374,6 +375,7 @@ class Game_Player
     $game_map.display_y = [0, [y * 128 - CENTER_Y, max_y].min].max
   end
 end
+
 =begin
 #===============================================================================
 # ** Sprite

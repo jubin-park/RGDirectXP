@@ -22,7 +22,7 @@ class Spriteset_Map
     init_for_centered_small_maps
     w = [$game_map.width  * 32 , Graphics.width].min
     h = [$game_map.height * 32 , Graphics.height].min
-    @viewport1.resize(x,y,w,h)
+    @viewport1.resize(x, y, w, h)
   end
   
 end

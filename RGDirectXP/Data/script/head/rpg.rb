@@ -80,8 +80,8 @@ module RPG
     def self.title(filename)
       self.load_bitmap("Graphics/Titles/", filename)
     end
-    def self.windowskin(filename)
-      self.load_bitmap("Graphics/Windowskins/", filename)
+    def self.transition(filename)
+      self.load_bitmap("Graphics/Transitions/", filename)
     end
     def self.tile(filename, tile_id, hue)
       key = [filename, tile_id, hue]
@@ -94,6 +94,9 @@ module RPG
         @cache[key].hue_change(hue)
       end
       @cache[key]
+    end
+    def self.windowskin(filename)
+      self.load_bitmap("Graphics/Windowskins/", filename)
     end
     def self.clear
       @cache = {}
