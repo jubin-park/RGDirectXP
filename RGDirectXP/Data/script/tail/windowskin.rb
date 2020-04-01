@@ -2,7 +2,7 @@
 # * Window_Base
 #───────────────────────────────────────────────────────────────────────────────
 class Window_Base
-  alias_method(:rmxptorgss3_initialize, :initialize) if !$@
+  alias_method(:rmxptorgss3_initialize, :initialize)
   def initialize(*args)
     rmxptorgss3_initialize(*args)
     self.padding = 16
@@ -92,8 +92,8 @@ module PK8
 end
 class Window_Base < Window
   unless method_defined?(:pk8_xpwindowskin_initialize)
-    alias_method(:pk8_xpwindowskin_initialize, :initialize) if !$@
-    alias_method(:pk8_xpwindowskin_update, :update) if !$@
+    alias_method(:pk8_xpwindowskin_initialize, :initialize)
+    alias_method(:pk8_xpwindowskin_update, :update)
   end
   def initialize(*args)
     pk8_xpwindowskin_initialize(*args)

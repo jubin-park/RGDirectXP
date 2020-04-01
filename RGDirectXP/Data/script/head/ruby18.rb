@@ -29,15 +29,15 @@ ________________________________________________________________________________
 ================================================================================
 =end
 
-$DEBUG = $TEST
-
 # Object - p
 def p(*args)
+  Kernel.p(args)
   msgbox_p(*args)
 end
 
 # Object - print
 def print(*args)
+  Kernel.print(args)
   msgbox(*args)
 end
 
@@ -58,18 +58,17 @@ end
 
 # String - delete, delete!, []
 class String
-  
   # Ruby 1.9 encodes strings to UTF-8 rather than treats them as pure bytes in 
   # Ruby 1.8. This causes errors in scripts that attempt to delete null 
   # characters ("\0"). This fix converts any of those invalid byte-sequences to
   # something acceptable then removes them.
-  alias delete_utf8 delete
+  alias_method(:delete_utf8, :delete)
   def delete(arg)
     s = self.encode("UTF-16be", :invalid=>:replace, :replace=>"\uFFFD").encode('UTF-8')
     s.delete_utf8(arg + "\uFFFD")
   end
   
-  alias delete_self_utf8 delete!
+  alias_method(:delete_self_utf8, :delete!)
   def delete!(arg)
     self.encode!("UTF-16be", :invalid=>:replace, :replace=>"\uFFFD").encode!('UTF-8')
     delete_self_utf8(arg + "\uFFFD")
@@ -77,13 +76,37 @@ class String
 
   # In Ruby 1.8, if only one argument is passed, it would return the character
   # byte at that index rather than the character itself (which Ruby 1.9 does).
-  alias getchar []
+  alias_method(:getchar, :[])
   def [](*args)
     if args.size == 1 && args[0].is_a?(Fixnum)
       self.getbyte(args[0])
     else
       getchar(*args)
     end
+  end
+
+  MultiByteToWideChar       = Win32API.new('kernel32', 'MultiByteToWideChar', 'llplpl', 'l')
+  WideCharToMultiByte       = Win32API.new('kernel32', 'WideCharToMultiByte', 'llplplpp', 'l')
+  CP_UTF8 = 65001
+
+  def to_u
+    len = MultiByteToWideChar.call(0, 0, self, -1, nil, 0)
+    buf = "\0" * (len*2)
+    MultiByteToWideChar.call(0, 0, self, -1, buf, buf.size/2)
+    len = WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, nil, 0, nil, nil)
+    ret = "\0" * (len*2)
+    WideCharToMultiByte.call(CP_UTF8, 0, buf, -1, ret, ret.size, nil, nil)
+    return ret.unpack('C*').select{|s| s != 0}.pack('C*')
+  end
+
+  def to_m
+    len = MultiByteToWideChar.call(CP_UTF8, 0, self, -1, nil, 0)
+    buf = "\0" * (len*2)
+    MultiByteToWideChar.call(CP_UTF8, 0, self, -1, buf, buf.size/2)
+    len = WideCharToMultiByte.call(0, 0, buf, -1, nil, 0, nil, nil)
+    ret = "\0" * len
+    WideCharToMultiByte.call(0, 0, buf, -1, ret, ret.size, nil, nil)
+    return ret
   end
 end
 

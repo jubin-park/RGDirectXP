@@ -4,7 +4,7 @@
 class Viewport
   attr_accessor :offset_x, :offset_y, :attached_planes
   
-  alias zer0_viewport_resize_init initialize
+  alias_method(:zer0_viewport_resize_init, :initialize)
   def initialize(x=0, y=0, width=Graphics.width, height=Graphics.height, override=false)
     # Variables needed for Viewport children (for the Plane rewrite); ignore if
     # your game resolution is not larger than 640x480

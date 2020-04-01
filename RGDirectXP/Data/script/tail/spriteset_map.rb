@@ -3,7 +3,7 @@
 #===============================================================================
 class Spriteset_Map
 
-  alias init_for_centered_small_maps initialize
+  alias_method(:init_for_centered_small_maps, :initialize)
   #---------------------------------------------------------------------------
   # Resize and reposition viewport so that it fits smaller maps
   #---------------------------------------------------------------------------
