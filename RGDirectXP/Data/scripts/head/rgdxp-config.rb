@@ -9,7 +9,9 @@ module RGDXP; module Config
 
   # 백그라운드 실행
   Graphics.background_exec = true
-
+  
+  # 수직 동기화
+  Graphics.vsync = true
   # 프레임
   Graphics.frame_rate = 60
   
