@@ -4,6 +4,9 @@ module RGDXP; module Config
   Graphics.resize_screen(640, 480)
   # 시작 시 전체화면 
   FULLSCREEN_WHEN_START = false
+  # ALT + ENTER 키 허용 여부
+  ENABLE_KEY_ALT_ENTER = true
+
   # 프레임
   Graphics.frame_rate = 60
   

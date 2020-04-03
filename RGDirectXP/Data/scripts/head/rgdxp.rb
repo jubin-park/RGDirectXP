@@ -16,6 +16,7 @@ module RGDXP
     set_debug_mode
     show_console_window if $DEBUG || $TEST
     disable_key_f10
+    disable_key_alt_enter if Config::ENABLE_KEY_ALT_ENTER
     Graphics.toggle_fullscreen if Config::FULLSCREEN_WHEN_START && !Graphics.is_fullscreen?
   end
 
@@ -34,6 +35,10 @@ module RGDXP
 
   def disable_key_f10
     RegisterHotKey.call(Graphics.window_hwnd, 0, 0, 0x79)
+  end
+
+  def disable_key_alt_enter
+    RegisterHotKey.call(Graphics.window_hwnd, 0, 0x0001, 0x0D)
   end
 
   def get_caption
