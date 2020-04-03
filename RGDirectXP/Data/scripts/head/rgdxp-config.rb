@@ -7,6 +7,9 @@ module RGDXP; module Config
   # ALT + ENTER 키 허용 여부
   ENABLE_KEY_ALT_ENTER = true
 
+  # 백그라운드 실행
+  Graphics.background_exec = true
+
   # 프레임
   Graphics.frame_rate = 60
   
