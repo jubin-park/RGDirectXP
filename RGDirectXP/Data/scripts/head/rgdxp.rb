@@ -16,6 +16,7 @@ module RGDXP
     set_debug_mode
     show_console_window if $DEBUG || $TEST
     disable_key_f10
+    Graphics.toggle_fullscreen if Config::FULLSCREEN_WHEN_START && !Graphics.is_fullscreen?
   end
 
   def set_debug_mode

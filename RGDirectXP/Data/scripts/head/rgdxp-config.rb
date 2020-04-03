@@ -2,7 +2,8 @@ module RGDXP; module Config
 
   # 해상도
   Graphics.resize_screen(640, 480)
-  
+  # 시작 시 전체화면 
+  FULLSCREEN_WHEN_START = false
   # 프레임
   Graphics.frame_rate = 60
   
