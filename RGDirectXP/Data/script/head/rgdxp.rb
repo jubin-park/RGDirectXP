@@ -3,7 +3,7 @@ module RGDXP
   RegisterHotKey            = Win32API.new('user32', 'RegisterHotKey', 'llll', 'l')
   AllocConsole              = Win32API.new('kernel32', 'AllocConsole', 'v', 'l')
   SetForegroundWindow       = Win32API.new('user32', 'SetForegroundWindow', 'l', 'l')
-  SetConsoleTitle           = Win32API.new('kernel32','SetConsoleTitleA', 'p', 'l')
+  SetConsoleTitle           = Win32API.new('kernel32','SetConsoleTitle', 'p', 'l')
   GetConsoleWindow          = Win32API.new('kernel32', 'GetConsoleWindow', 'v', 'l')
   GetCommandLine            = Win32API.new("kernel32", "GetCommandLine", "v", "p")
   SetWindowPos              = Win32API.new('user32', 'SetWindowPos', 'iiiiiii', 'i')
@@ -14,7 +14,6 @@ module RGDXP
 
   def init
     set_debug_mode
-    set_default_font
     show_console_window if $DEBUG || $TEST
     disable_key_f10
   end
@@ -24,22 +23,12 @@ module RGDXP
     $DEBUG = $TEST = (argv[1] == 'debug')
   end
 
-  def set_default_font
-    Font.default_name = "Arial"
-    Font.default_size = 22
-    Font.default_bold = false
-    Font.default_italic = false
-    Font.default_shadow = false
-    Font.default_outline = false
-    Font.default_color = Color.new(255, 255, 255, 255)
-    Font.default_out_color = Color.new(0, 0, 0, 128)
-  end
-
   def show_console_window
+    return if Config::ConsoleWindow::VISIBLE != true
     AllocConsole.call
     $stdout.reopen('CONOUT$')
     SetForegroundWindow.call(Graphics.window_hwnd)
-    SetConsoleTitle.call("#{get_caption << " - " << Config::CONSOLE_WINDOW_NAME}".to_m)
+    SetConsoleTitle.call(get_caption << " - " << Config::ConsoleWindow::NAME.to_m)
   end
 
   def disable_key_f10

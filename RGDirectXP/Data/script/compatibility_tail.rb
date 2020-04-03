@@ -1,6 +1,5 @@
-require "tail/spriteset_map"
-require "tail/windowskin"
 require "tail/tilemap"
+require "tail/windowskin"
 require "tail/window_item"
 require "tail/window_skill"
 require "tail/window_equipitem"

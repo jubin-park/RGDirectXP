@@ -1,14 +1,3 @@
-#───────────────────────────────────────────────────────────────────────────────
-# * Window_Base
-#───────────────────────────────────────────────────────────────────────────────
-class Window_Base
-  alias_method(:rmxptorgss3_initialize, :initialize)
-  def initialize(*args)
-    rmxptorgss3_initialize(*args)
-    self.padding = 16
-  end
-end
-
 =begin
 
  RMXP to RMVX (Ace) Windowskin Converter v1.0.4
@@ -90,6 +79,22 @@ module PK8
     Colors[31] = [192, 128, 255]
   end
 end
+
+#==============================================================================
+# ** Window_Base (RGSS3)
+#==============================================================================
+
+class Window_Base
+  alias_method(:rgss3_initialize, :initialize)
+  def initialize(*args)
+    rgss3_initialize(*args)
+    self.padding = 16
+  end
+end
+
+#==============================================================================
+# ** Window_Base (RGSS1)
+#==============================================================================
 
 class Window_Base < Window
   

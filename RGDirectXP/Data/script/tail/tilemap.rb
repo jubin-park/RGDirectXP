@@ -73,21 +73,20 @@ SCREEN = [Graphics.width, Graphics.height]
 # within reason. Centering, viewports, etc. will all be taken care of, but it
 # is recommended that you use values divisible by 32 for best results.
 
-UPDATE_COUNT = 16
+UPDATE_COUNT = RGDXP::Config::Tilemap::UPDATE_COUNT
 # Define the number of frames between autotile updates. The lower the number,
 # the faster the animations cycle. This can be changed in-game with the
 # following script call: $game_map.autotile_speed = SPEED
 
-PRE_CACHE_DATA = true
+PRE_CACHE_DATA = RGDXP::Config::Tilemap::PRE_CACHE_DATA
 # The pre-cached file is mandatory for the script to work. As long as this is
 # true, the data will be created each time the game is test-played. This is
 # not always neccessary, only when maps are altered, so you can disable it to
 # help speed up game start-up, and it will use the last created file.
 
-RESOLUTION_LOG = true
+RESOLUTION_LOG = RGDXP::Config::Tilemap::RESOLUTION_LOG
 # This will create a log in the Game directory each time the game is ran in
 # DEBUG mode, which will list possible errors with map sizes, etc. 
-
 
 #===============================================================================
 # ** Integer
@@ -183,12 +182,21 @@ end
 
 class Tilemap
 
-  attr_reader   :map_data, :ox, :oy, :viewport
-  attr_accessor :tileset, :autotiles, :priorities
+  attr_reader(:map_data)
+  attr_reader(:ox)
+  attr_reader(:oy)
+  attr_reader(:viewport)
+  attr_accessor(:tileset)
+  attr_accessor(:autotiles)
+  attr_accessor(:priorities)
 
   def initialize(viewport)
     # Initialize instance variables to store required data.
-    @viewport, @autotiles, @layers, @ox, @oy = viewport, [], [], 0, 0
+    @viewport = viewport
+    @autotiles = []
+    @layers = []
+    @ox = 0
+    @oy = 0
     # Get priority and autotile data for this tileset from instance of Game_Map.
     @priorities, @animated = $game_map.priorities, $game_map.autotile_data
     # Create a sprite and viewport to use for each priority level.
@@ -198,15 +206,15 @@ class Tilemap
     }
   end
 
-  def ox=(ox)
+  def ox=(value)
     # Set the origin of the X-axis for all the sprites.
-    @ox = ox
+    @ox = value
     @layers.each {|sprite| sprite.ox = @ox } 
   end
 
-  def oy=(oy)
+  def oy=(value)
     # Set the origin of the y-axis for all the sprites.
-    @oy = oy
+    @oy = value
     @layers.each {|sprite| sprite.oy = @oy } 
   end
 
@@ -273,8 +281,80 @@ class Tilemap
 end
 
 #===============================================================================
-# Game_Map
+# ** Viewport
 #===============================================================================
+
+class Viewport
+
+  attr_accessor(:offset_x)
+  attr_accessor(:offset_y)
+  attr_accessor(:attached_planes)
+
+  alias_method(:zer0_viewport_resize_init, :initialize)
+  def initialize(x=0, y=0, width=Graphics.width, height=Graphics.height, override=false)
+    # Variables needed for Viewport children (for the Plane rewrite); ignore if
+    # your game resolution is not larger than 640x480
+    @offset_x = @offset_y = 0
+
+    if x.is_a?(Rect)
+      # If first argument is a Rectangle, just use it as the argument.
+      zer0_viewport_resize_init(x)
+    elsif [x, y, width, height] == [0, 0, 640, 480] && !override 
+      # Resize fullscreen viewport, unless explicitly overridden.
+      zer0_viewport_resize_init(Rect.new(0, 0, Graphics.width, Graphics.height))
+    else
+      # Call method normally.
+      zer0_viewport_resize_init(Rect.new(x, y, width, height))
+    end
+  end
+  
+  def resize(*args)
+    # Resize the viewport. Can call with (X, Y, WIDTH, HEIGHT) or (RECT).
+    if args[0].is_a?(Rect)
+      args[0].x += @offset_x
+      args[0].y += @offset_y
+      self.rect.set(args[0].x, args[0].y, args[0].width, args[0].height)
+    else
+      args[0] += @offset_x
+      args[1] += @offset_y
+      self.rect.set(*args)
+    end
+  end
+
+end
+
+#===============================================================================
+# ** Spriteset_Map
+#===============================================================================
+class Spriteset_Map
+
+  alias_method(:init_for_centered_small_maps, :initialize)
+  #---------------------------------------------------------------------------
+  # Resize and reposition viewport so that it fits smaller maps
+  #---------------------------------------------------------------------------
+  def initialize
+    @center_offsets = [0,0]
+    if $game_map.width < (Graphics.width / 32.0).ceil
+      x = (Graphics.width - $game_map.width * 32) / 2
+    else
+      x = 0
+    end
+    if $game_map.height < (Graphics.height / 32.0).ceil
+      y = (Graphics.height - $game_map.height * 32) / 2
+    else
+      y = 0
+    end
+    init_for_centered_small_maps
+    w = [$game_map.width  * 32 , Graphics.width].min
+    h = [$game_map.height * 32 , Graphics.height].min
+    @viewport1.resize(x, y, w, h)
+  end
+  
+end
+
+#==============================================================================
+# ** Game_Map
+#==============================================================================
 
 class Game_Map
 
@@ -323,6 +403,7 @@ class Game_Map
     @autotile_speed = speed
     @autotile_speed = 1 if @autotile_speed < 1
   end
+
 end
 
 #===============================================================================
@@ -356,6 +437,7 @@ class Game_Character
     end
     return 0
   end
+
 end
 
 #===============================================================================
@@ -374,121 +456,9 @@ class Game_Player
     $game_map.display_x = [0, [x * 128 - CENTER_X, max_x].min].max
     $game_map.display_y = [0, [y * 128 - CENTER_Y, max_y].min].max
   end
+
 end
 
-=begin
-#===============================================================================
-# ** Sprite
-#===============================================================================
-
-class Sprite
-
-alias_method(:zer0_sprite_resize_init, :initialize)
-def initialize(view = nil)
-  # Unless viewport is defined, use the new default viewport size.
-  view = Viewport.new(0, 0, SCREEN[0], SCREEN[1]) if view == nil
-  # Call original method.
-  zer0_sprite_resize_init(view)
-end
-end
-
-#===============================================================================
-# ** Viewport
-#===============================================================================
-
-class Viewport
-
-alias_method(:zer0_viewport_resize_init, :initialize)
-def initialize(x=0, y=0, width=SCREEN[0], height=SCREEN[1], override=false)
-  if x.is_a?(Rect)
-    # If first argument is a Rectangle, just use it as the argument.
-    zer0_viewport_resize_init(x)
-  elsif [x, y, width, height] == [0, 0, 640, 480] && !override 
-    # Resize fullscreen viewport, unless explicitly overridden.
-    zer0_viewport_resize_init(Rect.new(0, 0, SCREEN[0], SCREEN[1]))
-  else
-    # Call method normally.
-    zer0_viewport_resize_init(Rect.new(x, y, width, height))
-  end
-end
-
-def resize(*args)
-  # Resize the viewport. Can call with (X, Y, WIDTH, HEIGHT) or (RECT).
-  self.rect = args[0].is_a?(Rect) ? args[0] : Rect.new(*args)
-end
-end
-
-#===============================================================================
-# ** Bitmap
-#===============================================================================
-
-class Bitmap
-
-alias_method(:zer0_resolution_resize_init, :initialize)
-def initialize(width = 32, height = 32, override = false)
-  if width.is_a?(String)
-    # Call the filename if the first argument is a String.
-    zer0_resolution_resize_init(width)
-  elsif [width, height] == [640, 480] && !override
-    # Resize fullscreen bitmap unless explicitly overridden.
-    zer0_resolution_resize_init(SCREEN[0], SCREEN[1])
-  else
-    # Call method normally.
-    zer0_resolution_resize_init(width, height)
-  end
-end
-end
-
-
-#===============================================================================
-# ** Plane
-#===============================================================================
-
-class Plane
-
-def z=(z)
-  # Change the Z value of the viewport, not the sprite.
-  super(z * 1000)
-end
-
-def ox=(ox)
-  return if @bitmap == nil
-  # Have viewport stay in loop on X-axis.
-  super(ox % @bitmap.width)
-end
-
-def oy=(oy)
-  return if @bitmap == nil
-  # Have viewport stay in loop on Y-axis.
-  super(oy % @bitmap.height)
-end
-
-def bitmap
-  # Return the single bitmap, before it was tiled.
-  return @bitmap
-end
-
-def bitmap=(tile)
-  @bitmap = tile
-  # Calculate the number of tiles it takes to span screen in both directions.
-  xx = 1 + (SCREEN[0].to_f / tile.width).ceil
-  yy = 1 + (SCREEN[1].to_f / tile.height).ceil
-  # Create appropriately sized bitmap, then tile across it with source image.
-  plane = Bitmap.new(@bitmap.width * xx, @bitmap.height * yy)
-  (0..xx).each {|x| (0..yy).each {|y|
-    plane.blt(x * @bitmap.width, y * @bitmap.height, @bitmap, @bitmap.rect) 
-  }}
-  # Set the bitmap to the sprite through its super class (Sprite).
-  super(plane)
-end
-
-# Redefine methods dealing with coordinates (defined in super) to do nothing.
-def x; end
-def y; end
-def x=(x); end
-def y=(y); end
-end
-=end
 #===============================================================================
 # DEBUG Mode
 #===============================================================================
@@ -543,7 +513,7 @@ if RESOLUTION_LOG
   cached_data = Marshal.load(file)
   file.close
   # Create a text file and write the header.
-  file = File.open('Resolution Log.txt', 'wb')
+  file = File.open('Resolution_Log.txt', 'wb')
   file.write("[RESOLUTION LOG]\r\n\r\n")
   time = Time.now.strftime("%x at %I:%M:%S %p")
   file.write("  Logged on #{time}\r\n\r\n")
