@@ -26,13 +26,13 @@ module Load_RTP_File
 end
 
 #==============================================================================
-# ** Ini
+# ** INI
 #==============================================================================
-module Ini
+module INI
   #--------------------------------------------------------------------------
-  # * self.readIni
+  # * self.read
   #--------------------------------------------------------------------------
-  def self.readIni(item = "Title")
+  def self.read(item = "Title")
     buf = 0.chr * 256
     @gpps ||= Win32API.new("kernel32","GetPrivateProfileString","pppplp","l")
     @gpps.call("Game",item,"",buf,256,"Game.ini")
@@ -68,9 +68,9 @@ module RPG
     FindNextFile  = Win32API.new("kernel32", "FindNextFileW", "LP", "I")
     ReadRegistry = Win32API.new("advapi32","RegGetValue","lppllpp","l")
     #--------------------------------------------------------------------------
-    # * getRTPPath
+    # * get_rtp_path
     #--------------------------------------------------------------------------
-    def self.getRTPPath(rgss,rtpname)
+    def self.get_rtp_path(rgss,rtpname)
       return "" if rtpname == "" or rtpname.nil?
       # Get the registry value's length
       reg = [ 0x80000002, # HKEY_LOCAL_MACHINE
@@ -95,18 +95,18 @@ module RPG
     #--------------------------------------------------------------------------
     @@RTP = []
     if Load_RTP_File::RMXP
-      @@RTP << self.getRTPPath('RGSS','Standard')
+      @@RTP << self.get_rtp_path('RGSS','Standard')
       (0..3).each do |i| 
-        @@RTP << self.getRTPPath('RGSS',Ini.readIni("RTP#{i.to_s}")) 
+        @@RTP << self.get_rtp_path('RGSS',INI.read("RTP#{i.to_s}")) 
       end 
     end  
-    @@RTP << self.getRTPPath('RGSS2',"RPGVX")    if Load_RTP_File::RMVX
-    @@RTP << self.getRTPPath('RGSS3',"RPGVXAce") if Load_RTP_File::RMVXA
+    @@RTP << self.get_rtp_path('RGSS2',"RPGVX")    if Load_RTP_File::RMVX
+    @@RTP << self.get_rtp_path('RGSS3',"RPGVXAce") if Load_RTP_File::RMVXA
     @@RTP.reject! {|rtp| rtp.nil? || rtp.empty?}
     #--------------------------------------------------------------------------
-    # * self.findP
+    # * self.find_p
     #--------------------------------------------------------------------------
-    def self.findP(*paths)
+    def self.find_p(*paths)
       findFileData = " " * 596
       result = ""
       for file in paths        
@@ -118,9 +118,9 @@ module RPG
       return result
     end
     #--------------------------------------------------------------------------
-    # * self.RTP
+    # * self.rtp
     #--------------------------------------------------------------------------
-    def self.RTP(path)
+    def self.rtp(path)
       @list ||= {}
       return @list[path] if @list.include?(path)
       check = File.extname(path).empty?
@@ -133,7 +133,7 @@ module RPG
       end
       rtp.push(path)
       rtp.push(path + ".*") if check
-      pa = self.findP(*rtp)
+      pa = self.find_p(*rtp)
       @list[path] = pa == "" ? path : pa
       return @list[path]
     end
@@ -150,7 +150,7 @@ class << Audio
   [:bgm_play,:bgs_play,:se_play,:me_play].each do |meth|
     $@ || alias_method(:"#{meth}_path", :"#{meth}")
     define_method(:"#{meth}") do |*args|
-      args[0] = RPG::Path::RTP(args[0]) if args[0].is_a?(String)
+      args[0] = RPG::Path.rtp(args[0]) if args[0].is_a?(String)
       send(:"#{meth}_path",*args)
     end
   end
@@ -168,7 +168,7 @@ class Bitmap
   # ● Object Initialization
   #--------------------------------------------------------------------------
   def initialize(*args)
-    args[0] = RPG::Path::RTP(args.at(0)) if args.at(0).is_a?(String)
+    args[0] = RPG::Path.rtp(args.at(0)) if args.at(0).is_a?(String)
     rtp_path_init(*args)
   end
 end
@@ -187,7 +187,7 @@ class << Graphics
   # ● transition
   #--------------------------------------------------------------------------
   def transition(*args)
-    args[1] = RPG::Path::RTP(args.at(1)) if args[1].is_a?(String)
+    args[1] = RPG::Path.rtp(args.at(1)) if args[1].is_a?(String)
     rtp_path_transition(*args)
   end
 end
