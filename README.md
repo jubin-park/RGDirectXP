@@ -21,7 +21,7 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
 5. Game.ini을 실행해서 `Library=RGSS10XX.dll` 을 `Library=RGSS301.dll` 로 수정한 뒤 저장합니다.
 6. Game.exe 파일을 실행합니다. 아래의 오류가 발생하는 경우 6-1를 참고하세요.
 
-    6-1. RGD 프로젝트는 DirectX9 엔진을 사용하기 때문에, **DirectX9 SDK** 를 설치해야 합니다.
+    6-1. RGD 프로젝트는 DirectX9 엔진을 사용하기 때문에, **DirectX9** 를 설치해야 합니다.
 
         ---------------------------
         Game.exe - 시스템 오류
@@ -46,7 +46,7 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
 5. Open Game.ini file, rename `Library=RGSS10XX.dll` to `Library=RGSS301.dll`, and save file.
 6. Execute Game.exe file. If you get a error below, read 6-1.
 
-    6-1. You should install DirectX9 SDK in your computer. Because RGD use DirectX9 Engine.
+    6-1. You should install DirectX9 in your computer. Because RGD use DirectX9 Engine.
 
         ---------------------------
         Game.exe - System Error
