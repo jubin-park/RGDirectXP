@@ -2,7 +2,7 @@
 
 ## Introduction
 
-The *[RGD](http://invwindy.mist.so/archives/290)* project have been released by two developers *invwindy* and *Fux2*. They inject DirectX9 Engine into Game.exe and rebuilt it. 
+The *[RGD](http://invwindy.mist.so/archives/290)* project have been released by two developers *invwindy* and *Fux2*. They injected DirectX9 Engine into Game.exe and rebuilt it. 
 
 But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project comes out. You can apply *RGD* with games made from RPGXP by adding and complementing combatibility scripts.
 
