@@ -26,7 +26,8 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
         ---------------------------
         Game.exe - 시스템 오류
         ---------------------------
-        d3dx9_43.dll이(가) 없어 코드 실행을 진행할 수 없습니다. 프로그램을 다시 설치하면 이 문제가 해결될 수 있습니다. 
+        d3dx9_43.dll이(가) 없어 코드 실행을 진행할 수 없습니다.
+        프로그램을 다시 설치하면 이 문제가 해결될 수 있습니다. 
         ---------------------------
         확인   
         ---------------------------
@@ -49,7 +50,8 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
         ---------------------------
         Game.exe - System Error
         ---------------------------
-        The program can't start because d3dx9_43.dll is missing from your computer. Try reinstalling the program to fix this problem.
+        The program can't start because d3dx9_43.dll is missing from your computer.
+        Try reinstalling the program to fix this problem.
         ---------------------------
         OK
         ---------------------------
