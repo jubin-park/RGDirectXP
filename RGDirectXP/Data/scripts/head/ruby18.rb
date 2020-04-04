@@ -13,8 +13,6 @@
  There is nothing to do here.
  Please keep this script in its current location.
 
-________________________________________________________________________________
-
  [ Version History]
  
  Ver.      Date            Notes
