@@ -17,7 +17,6 @@
          To get Game.exe file and more information, please visit below RGD-developer's website link.
 
          http://invwindy.mist.so/archives/290
-
 =end
 
 module RGDXP; module Config

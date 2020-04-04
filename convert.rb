@@ -18,5 +18,5 @@ def generate_script(filename)
 	output.close
 end
 
-generate_script "compatibility_head.rb"
-generate_script "compatibility_tail.rb"
+generate_script "rgdxp_head.rb"
+generate_script "rgdxp_tail.rb"
