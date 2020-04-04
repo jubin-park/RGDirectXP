@@ -1,3 +1,25 @@
+=begin
+  title  RGDirectXP
+
+  author jubin-park
+  date   2020.04.04
+
+  credit invwindy and Fux2 (RGDirect)
+         joe59491, LiTTleDRAgo, and KK20 (Loading RTP Path)
+         ForeverZer0 (Custom Resolution - Tilemap)
+         PK8 and PhoenixFire (Windowskin Converter)
+         Enterbrain (RPG module)
+         unknown scripters (Ruby 1.8 Methods)
+
+  desc   RGDirectXP is compatible with RGD in RPG Maker XP, in other words, you can use DirectX with RPGXP.
+         To use RGDirectXP, you should have already RPGVXACE product as well as RPGXP. Because RGD uses RGSS301.dll library.
+         RGDirectXP DOES NOT offer RGD's Game.exe file. Compatibility scripts ONLY.
+         To get Game.exe file and more information, please visit below RGD-developer's website link.
+
+         http://invwindy.mist.so/archives/290
+
+=end
+
 module RGDXP; module Config
 
   # 해상도
