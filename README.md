@@ -35,6 +35,7 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
     Game.exe을 실행할 때, 위 에러 메세지가 나온다면 [DirectX9 SDK 다운로드](https://www.microsoft.com/en-us/download/details.aspx?id=6812) 링크를 눌러 설치하세요.
 7. [rgdxp_head.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_head.rb) 파일의 내용을 복사해서 스크립트 섹션 최상단에 넣습니다.
 8. [rgdxp_tail.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_tail.rb) 파일의 내용을 복사해서 스크립트 섹션 Main 바로 위에 넣습니다.
+9. 마지막으로 Data/PreCacheMapData.rxdata 파일을 생성해야 합니다. F12 버튼을 눌러서 디버그 모드로 게임을 실행하면 생성됩니다. 이 파일은 ForeverZer0님의 타일맵 클래스와 관련이 있습니다.
 
 ## How To Use
 
@@ -59,6 +60,7 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
     
 7. After copy [rgdxp_head.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_head.rb) to clipboard, paste and locate the script **at the TOP** of script list.
 8. After copy [rgdxp_tail.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_tail.rb) to clipboard, paste and locate the script **above Main** section.
+9. In The End, trigger **F12 button** to start game in debug-mode. You'll get Data/PreCacheMapData.rxdata file. This file is related to ForeverZer0's Tilemap script.
 
 # RGDirect (RGD)
 Copyright (C) 2018-2020 invwindy / fux2
