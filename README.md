@@ -1,7 +1,39 @@
+# RGDirectXP
+
+## Introduction
+
+The *[RGD](http://invwindy.mist.so/archives/290)* project have been released by two developers *invwindy* and *Fux2*. They inject DirectX9 Engine into Game.exe and rebuilt it. 
+
+But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project comes out. You can apply *RGD* with games made from RPGXP by adding and complementing combatibility scripts.
+
+## How To Use
+
+1. http://invwindy.mist.so/archives/290 페이지에 접속합니다.
+2. **Instructions and Download Link** 하단의 *RGDv1.5.1.zip* 링크를 눌러 파일을 받습니다.
+3. 압축을 풀고 Game.exe 파일을 게임 프로젝트 폴더에 넣습니다.
+4. RGSS10XX.dll 파일을 지우고, RGSS301.dll 파일을 게임 프로젝트 폴더에 넣습니다.
+5. Game.ini을 실행해서 `Library=RGSS10XX.dll` 을 `Library=RGSS301.dll` 로 수정한 뒤 저장합니다.
+6. Game.exe 파일을 실행합니다. 아래의 오류가 발생하는 경우 6-1를 참고하세요.
+
+    6-1. RGD 프로젝트는 DirectX9 엔진을 사용하기 때문에, DirectX9 를 설치해야 합니다.
+
+        ---------------------------
+        Game.exe - 시스템 오류
+        ---------------------------
+        d3dx9_43.dll이(가) 없어 코드 실행을 진행할 수 없습니다. 프로그램을 다시 설치하면 이 문제가 해결될 수 있습니다. 
+        ---------------------------
+        확인   
+        ---------------------------
+
+    Game.exe을 실행할 때, 위 에러 메세지가 나온다면 아래의 링크로 들어가서 DirectX9 SDK를 설치하십시오.
+    
+    https://www.microsoft.com/en-us/download/details.aspx?id=6812
+
+7. https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_head.rb 파일의 내용을 복사해서 스크립트 섹션 최상단에 넣습니다.
+8. https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_tail.rb 파일의 내용을 복사해서 스크립트 섹션 Main 바로 위에 넣습니다.
+
 # RGDirect (RGD)
 Copyright (C) 2018-2020 invwindy / fux2
-
-Version 1.5.1
 
 ## Introduction
 
