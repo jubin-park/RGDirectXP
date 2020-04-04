@@ -2,20 +2,26 @@
 
 ## Introduction
 
-The *[RGD](http://invwindy.mist.so/archives/290)* project have been released by two developers *invwindy* and *Fux2*. They injected DirectX9 Engine into Game.exe and rebuilt it. 
+The *[RGD](http://invwindy.mist.so/archives/290)* project have been released by two developers *invwindy* and *Fux2*. They injected **DirectX9** Engine into Game.exe and rebuilt it. 
 
-But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project comes out. You can apply *RGD* with games made from RPGXP by adding and complementing combatibility scripts.
+But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project comes out. You can apply *RGD* with games made from *RPG Maker XP* by adding and complementing combatibility scripts.
+
+## 소개
+
+RGD 프로젝트는 개발자 *invwindy*님과 *Fux2*님이 배포한 프로젝트로, **DirectX9** 엔진을 Game.exe 파일에 주입하여 새로 만들었습니다.
+
+하지만 *RGD* 프로젝트는 *RPG Maker VX ACE*로 만든 게임에만 적용할 수 있습니다. 이제는 *RPG Maker XP* 환경에서도 *RGDirectXP* 에서 제공하는 스크립트를 추가만 하면 사용할 수 있습니다.
 
 ## How To Use
 
 1. http://invwindy.mist.so/archives/290 페이지에 접속합니다.
-2. **Instructions and Download Link** 하단의 *RGDv1.5.1.zip* 링크를 눌러 파일을 받습니다.
+2. **Instructions and Download Link** 하단의 *RGDv1.x.x.zip* 링크를 눌러 파일을 받습니다.
 3. 압축을 풀고 Game.exe 파일을 게임 프로젝트 폴더에 넣습니다.
 4. RGSS10XX.dll 파일을 지우고, RGSS301.dll 파일을 게임 프로젝트 폴더에 넣습니다.
 5. Game.ini을 실행해서 `Library=RGSS10XX.dll` 을 `Library=RGSS301.dll` 로 수정한 뒤 저장합니다.
 6. Game.exe 파일을 실행합니다. 아래의 오류가 발생하는 경우 6-1를 참고하세요.
 
-    6-1. RGD 프로젝트는 DirectX9 엔진을 사용하기 때문에, DirectX9 를 설치해야 합니다.
+    6-1. RGD 프로젝트는 DirectX9 엔진을 사용하기 때문에, **DirectX9** 를 설치해야 합니다.
 
         ---------------------------
         Game.exe - 시스템 오류
@@ -29,8 +35,8 @@ But *RGD* is only working in *RPG Maker VX Ace*. That's why *RGDirectXP* project
     
     https://www.microsoft.com/en-us/download/details.aspx?id=6812
 
-7. https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_head.rb 파일의 내용을 복사해서 스크립트 섹션 최상단에 넣습니다.
-8. https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_tail.rb 파일의 내용을 복사해서 스크립트 섹션 Main 바로 위에 넣습니다.
+7. [rgdxp_head.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_head.rb) 파일의 내용을 복사해서 스크립트 섹션 최상단에 넣습니다.
+8. [rgdxp_tail.rb](https://github.com/jubin-park/RGDirectXP/blob/master/src/rgdxp_tail.rb) 파일의 내용을 복사해서 스크립트 섹션 Main 바로 위에 넣습니다.
 
 # RGDirect (RGD)
 Copyright (C) 2018-2020 invwindy / fux2
